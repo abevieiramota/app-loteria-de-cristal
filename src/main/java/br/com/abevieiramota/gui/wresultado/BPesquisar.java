@@ -6,47 +6,54 @@ import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import br.com.abevieiramota.gui.wmain.Configuracao;
+import br.com.abevieiramota.messages.Messages;
 import br.com.abevieiramota.model.Resultado;
-import br.com.abevieiramota.model.dao.ResultadoDAO;
+import br.com.abevieiramota.model.dao.ResultadoDao;
 
 public class BPesquisar extends JButton {
-	
+
 	private static final long serialVersionUID = 1L;
 
-	private ResultadoDAO resDAO;
+	private ResultadoDao resDAO;
 
-	private static final String LABEL = "Buscar Resultado";
+	private static final String LABEL = Messages.getString("ui.b_pesquisar.label");
+	private static final String MSG_ERRO = Messages.getString("ui.erro_generico");
 
-	public BPesquisar(JTextField dataField, JTextArea resDiurno, JTextArea resNoturno) throws ClassNotFoundException, SQLException {
+	public BPesquisar(JTextField dataField, JTextArea resDiurno, JTextArea resNoturno)
+			throws ClassNotFoundException, SQLException {
 		super(LABEL);
-		resDAO = new ResultadoDAO();
-		
+
+		this.resDAO = new ResultadoDao();
+
 		final JTextField dataFieldF = dataField;
 		final JTextArea resFieldDiurnoF = resDiurno;
 		final JTextArea resFieldNoturnoF = resNoturno;
-		
+
 		addActionListener(new ActionListener() {
-			
+
 			public void actionPerformed(ActionEvent e) {
 				String data = dataFieldF.getText();
 				try {
-					List<Resultado> byData = resDAO.byData(data);
-					if(byData.size() > 0) {
-						resFieldDiurnoF.setText(String.format("\t DIURNO\n%s", byData.get(0).toTable()));
+					List<Resultado> byData = BPesquisar.this.resDAO.byData(data, Configuracao.getTipoLoteria());
+					if (byData.size() > 0) {
+						resFieldDiurnoF.setText(String.format("\t DIURNO\n%s", byData.get(0).toTable())); //$NON-NLS-1$
 					} else {
-						resFieldDiurnoF.setText(String.format("\t DIURNO\n%s", "Sem resultado"));
+						resFieldDiurnoF.setText(String.format("\t DIURNO\n%s", "Sem resultado")); //$NON-NLS-1$ //$NON-NLS-2$
 					}
-					if(byData.size() > 1) {
-						resFieldNoturnoF.setText(String.format("\t NOTURNO\n%s", byData.get(1).toTable()));
+					if (byData.size() > 1) {
+						resFieldNoturnoF.setText(String.format("\t NOTURNO\n%s", byData.get(1).toTable())); //$NON-NLS-1$
 					} else {
-						resFieldNoturnoF.setText(String.format("\t NOTURNO\n%s","Sem resultado"));
+						resFieldNoturnoF.setText(String.format("\t NOTURNO\n%s", "Sem resultado")); //$NON-NLS-1$ //$NON-NLS-2$
 					}
-				} catch(Throwable ex) {
-					resFieldDiurnoF.setText("Erro");
-					resFieldNoturnoF.setText("Erro");
+				} catch (SQLException ex) {
+					ex.printStackTrace();
+
+					JOptionPane.showMessageDialog(null, MSG_ERRO);
 				}
 			}
 		});

@@ -17,6 +17,7 @@ import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 
 import br.com.abevieiramota.model.Resultado;
+import br.com.abevieiramota.model.TipoLoteria;
 
 @Ignore
 public class LoteriaHTMLParserBaseTest {
@@ -40,7 +41,7 @@ public class LoteriaHTMLParserBaseTest {
 	@Before
 	public void setUp() {
 		resultadosExtraidos = LoteriaHTMLParser.extrairResultadosDoHTMLDaData(HTML_COM_RESULTADO_CORRETO,
-				this.dataDosResultados);
+				this.dataDosResultados, TipoLoteria.LOCAL);
 		assertThat(resultadosExtraidos, is(notNullValue()));
 
 	}

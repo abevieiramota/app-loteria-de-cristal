@@ -7,9 +7,11 @@ import java.io.IOException;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jsoup.Jsoup;
 
+import br.com.abevieiramota.messages.Messages;
+
 public class LoteriaDownloader {
 
-	private static final String URL_BASE_TEMPLATE = "http://www.lotece.com.br/v2/?page_id=70&data=%s";
+	private static final String URL_BASE_TEMPLATE = Messages.getString("loteria.url");
 	private static final int CONNECTION_TIMEOUT = 10000000;
 	
 	public static String download(String data) throws IOException {

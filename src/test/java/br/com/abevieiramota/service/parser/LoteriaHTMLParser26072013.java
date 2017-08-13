@@ -9,7 +9,7 @@ import org.junit.runners.JUnit4;
 
 import br.com.abevieiramota.model.Resultado;
 import br.com.abevieiramota.model.Resultado.ResultadoBuilder;
-import br.com.abevieiramota.model.Resultado.Turno;
+import br.com.abevieiramota.model.Turno;
 
 /**
  * Para o arquivo de 26/07/2013 deve encontrar dois resultados de 26/07/2013.

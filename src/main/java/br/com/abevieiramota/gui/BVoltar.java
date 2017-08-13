@@ -5,19 +5,21 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
-public class BVoltar extends JButton {
-	
-	private static final long serialVersionUID = 1L;
-	private static final String LABEL = "Voltar";
+import br.com.abevieiramota.messages.Messages;
 
-	public BVoltar(DefaultWindow frame) {
+public class BVoltar extends JButton {
+
+	private static final long serialVersionUID = 547030000151550106L;
+	
+	private static final String LABEL = Messages.getString("ui.b_voltar.label");
+
+	public BVoltar(final WDefault frame) {
 		super(LABEL);
-		
-		final DefaultWindow window = frame;
+
 		addActionListener(new ActionListener() {
-			
+
 			public void actionPerformed(ActionEvent e) {
-				window.voltar();
+				frame.voltar();
 			}
 		});
 	}

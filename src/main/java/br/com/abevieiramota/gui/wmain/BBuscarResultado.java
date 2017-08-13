@@ -6,21 +6,23 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-import br.com.abevieiramota.gui.wresultado.ResultadoWindow;
+import br.com.abevieiramota.gui.wresultado.WResultado;
+import br.com.abevieiramota.messages.Messages;
 
 public class BBuscarResultado extends JButton {
 	private static final long serialVersionUID = 3959443379130014480L;
-	private static final String LABEL = "Buscar Resultado";
+	private static final String LABEL = Messages.getString("ui.b_buscar_resultado.text");
 
-	public BBuscarResultado(JFrame window) {
+	public BBuscarResultado(final JFrame caller) {
 		super(LABEL);
-		
-		final JFrame anterior = window;
+
 		addActionListener(new ActionListener() {
-			
+
 			public void actionPerformed(ActionEvent e) {
-				new ResultadoWindow(anterior).setVisible(true);
-				anterior.setVisible(false);
+				WResultado resultadoWindow = new WResultado(caller);
+				
+				resultadoWindow.setVisible(true);
+				caller.setVisible(false);
 			}
 		});
 	}

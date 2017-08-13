@@ -2,7 +2,7 @@ package br.com.abevieiramota.service.preditor;
 
 import br.com.abevieiramota.model.Resultado;
 import br.com.abevieiramota.model.Resultado.ResultadoBuilder;
-import br.com.abevieiramota.model.Resultado.Turno;
+import br.com.abevieiramota.model.Turno;
 
 public class ResultadosParaTest {
 	

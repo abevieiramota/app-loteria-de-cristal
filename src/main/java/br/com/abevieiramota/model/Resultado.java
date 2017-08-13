@@ -5,9 +5,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 import com.google.common.base.CharMatcher;
@@ -18,95 +15,14 @@ import br.com.abevieiramota.service.parser.Patterns;
 public class Resultado {
 
 	private static final String FORMATO_TO_TABLE = "\tPrêmio %d:\t%s\n";
-
 	private static final String FORMATO_TO_STRING = "Data [%s][%s] Premios[%s]";
-
-	public enum Premio {
-		_1, _2, _3, _4, _5, _6, _7, _8, _9, _10;
-
-		public final static Integer QUANTIDADE = Premio.values().length;
-	}
-
-	public enum Bicho {
-		AVESTRUZ,
-		AGUIA,
-		BURRO,
-		BORBOLETA,
-		CACHORRO,
-		CABRA,
-		CARNEIRO,
-		CAMELO,
-		COBRA,
-		COELHO,
-		CAVALO,
-		ELEFANTE,
-		GALO,
-		GATO,
-		JACARE,
-		LEAO,
-		MACACO,
-		PORCO,
-		PAVAO,
-		PERU,
-		TOURO,
-		TIGRE,
-		URSO,
-		VEADO,
-		VACA;
-
-		public static Bicho fromResultado(String resultado) {
-			Integer asInteger = Integer.valueOf(resultado);
-			Integer dezena = asInteger % 100;
-
-			if (dezena == 0) {
-				dezena = 100;
-			}
-
-			return Bicho.values()[(dezena - 1) / 4];
-		}
-	}
-
-	public enum Turno {
-
-		DIURNO(new String[] { "14:00h", "14:40h", "14:45h", "14:30h" }),
-		NOTURNO(new String[] { "19:10h", "19:30h", "19:00h" });
-
-		private static final String MSG_ERRO_REPRESENTACAO = "Representação de turno inexistente. [%s]";
-		private static final Map<String, Turno> MAP_REPR;
-
-		static {
-			Map<String, Turno> _mapRepr = new HashMap<>();
-
-			for (Turno turno : Turno.values()) {
-				for (String repr : turno.reprs) {
-					_mapRepr.put(repr, turno);
-				}
-			}
-
-			MAP_REPR = Collections.unmodifiableMap(_mapRepr);
-		}
-
-		private String[] reprs;
-
-		Turno(String[] reprs) {
-			this.reprs = reprs;
-		}
-
-		public static Turno get(String repr) {
-			if (!MAP_REPR.containsKey(repr)) {
-				throw new IllegalArgumentException(String.format(MSG_ERRO_REPRESENTACAO, repr));
-			}
-
-			return MAP_REPR.get(repr);
-		}
-
-	}
 
 	static public class ResultadoBuilder {
 
 		private Resultado resultado = new Resultado();
 
 		private boolean premiosSetados = false;
+		private boolean tipoLoteriaSetado = false;
 
 		public ResultadoBuilder data(String data) {
 			checkArgument(Patterns.REGEX_DATA.matcher(data).find());
@@ -131,6 +47,15 @@ public class Resultado {
 
 			return this;
 		}
+		
+		public ResultadoBuilder tipoLoteria(TipoLoteria tipoLoteria) {
+			checkNotNull(tipoLoteria);
+			
+			this.resultado.tipoLoteria = tipoLoteria;
+			this.tipoLoteriaSetado = true;
+			
+			return this;
+		}
 
 		public ResultadoBuilder turno(Turno turno) {
 			checkNotNull(turno);
@@ -144,16 +69,16 @@ public class Resultado {
 			checkState(this.resultado.data != null);
 			checkState(this.premiosSetados);
 			checkState(this.resultado.turno != null);
+			checkState(this.tipoLoteriaSetado);
 
-			return resultado;
+			return this.resultado;
 		}
 	}
 
 	private String[] premios;
-
-	public String data;
-
-	public Turno turno;
+	private String data;
+	private Turno turno;
+	private TipoLoteria tipoLoteria;
 
 	private Resultado() {
 		this.premios = new String[Premio.QUANTIDADE];
@@ -161,6 +86,18 @@ public class Resultado {
 
 	public String premio(Premio posicao) {
 		return this.premios[posicao.ordinal()];
+	}
+	
+	public TipoLoteria getTipoLoteria() {
+		return this.tipoLoteria;
+	}
+	
+	public String getData() {
+		return this.data;
+	}
+	
+	public Turno getTurno() {
+		return this.turno;
 	}
 
 	@Override

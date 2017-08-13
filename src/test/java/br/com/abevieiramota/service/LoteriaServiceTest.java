@@ -9,12 +9,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import br.com.abevieiramota.model.TipoLoteria;
+
 @Ignore
 @RunWith(JUnit4.class)
 public class LoteriaServiceTest {
 
 	@Test
 	public void deveAtualizarOSistema() throws ClassNotFoundException, SQLException, ParseException, IOException {
-		new LoteriaService().atualizar();
+		new LoteriaService().atualizar(TipoLoteria.LOCAL);
 	}
 }

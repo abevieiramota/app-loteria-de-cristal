@@ -10,8 +10,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import br.com.abevieiramota.model.Resultado.Bicho;
-
 @RunWith(Parameterized.class)
 public class ResultadoBichoTest {
 
@@ -35,7 +33,7 @@ public class ResultadoBichoTest {
 
 	@Test
 	public void test() {
-		Bicho bichoRetornado = Bicho.fromResultado(resultado);
+		Bicho bichoRetornado = Bicho.fromResultado(this.resultado, TipoDezena.TERCEIRA);
 		assertEquals(bichoEsperado, bichoRetornado);
 	}
 }

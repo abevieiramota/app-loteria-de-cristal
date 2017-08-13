@@ -11,7 +11,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import br.com.abevieiramota.model.Resultado.ResultadoBuilder;
-import br.com.abevieiramota.model.Resultado.Turno;
 
 @RunWith(JUnit4.class)
 public class ResultadoTest {
