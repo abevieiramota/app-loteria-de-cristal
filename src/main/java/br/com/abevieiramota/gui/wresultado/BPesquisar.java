@@ -41,14 +41,14 @@ public class BPesquisar extends JButton {
 				try {
 					List<Resultado> byData = BPesquisar.this.resDAO.byData(data, Configuracao.getTipoLoteria());
 					if (byData.size() > 0) {
-						resFieldDiurnoF.setText(String.format("\t DIURNO\n%s", byData.get(0).toTable())); //$NON-NLS-1$
+						resFieldDiurnoF.setText(String.format("\t DIURNO\n%s", byData.get(0).toTable()));
 					} else {
-						resFieldDiurnoF.setText(String.format("\t DIURNO\n%s", "Sem resultado")); //$NON-NLS-1$ //$NON-NLS-2$
+						resFieldDiurnoF.setText(String.format("\t DIURNO\n%s", "Sem resultado"));
 					}
 					if (byData.size() > 1) {
-						resFieldNoturnoF.setText(String.format("\t NOTURNO\n%s", byData.get(1).toTable())); //$NON-NLS-1$
+						resFieldNoturnoF.setText(String.format("\t NOTURNO\n%s", byData.get(1).toTable())); 
 					} else {
-						resFieldNoturnoF.setText(String.format("\t NOTURNO\n%s", "Sem resultado")); //$NON-NLS-1$ //$NON-NLS-2$
+						resFieldNoturnoF.setText(String.format("\t NOTURNO\n%s", "Sem resultado"));
 					}
 				} catch (SQLException ex) {
 					ex.printStackTrace();

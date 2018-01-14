@@ -1,7 +1,5 @@
 package br.com.abevieiramota.gui.wmain;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -22,7 +20,6 @@ import com.google.common.io.Files;
 
 import br.com.abevieiramota.messages.Messages;
 import br.com.abevieiramota.model.TipoDezena;
-import br.com.abevieiramota.model.TipoLoteria;
 import br.com.abevieiramota.model.Turno;
 import br.com.abevieiramota.service.preditor.PredicaoService;
 
@@ -45,24 +42,17 @@ public class BPredizer extends JButton {
 	public BPredizer(JFrame window) {
 		super(LABEL);
 
-		addActionListener(new PredizerActionListener(Configuracao.getTipoLoteria()));
+		addActionListener(new PredizerActionListener());
 	}
 
 	private static class PredizerActionListener implements ActionListener {
 
 		private static final Charset DEFAULT_CHARSET = Charsets.UTF_8;
-		private TipoLoteria tipo;
-
-		public PredizerActionListener(TipoLoteria tipoLoteria) {
-			checkNotNull(tipoLoteria);
-
-			this.tipo = tipoLoteria;
-		}
 
 		public void actionPerformed(ActionEvent e) {
 			try {
 				for (TipoDezena tipoDezena : TIPOS_DEZENA_A_PREDIZER) {
-					PredicaoService predicaoService = new PredicaoService(tipoDezena, this.tipo);
+					PredicaoService predicaoService = new PredicaoService(tipoDezena, Configuracao.getTipoLoteria());
 
 					for (EnumSet<Turno> turnosAPredizer : TURNOS_A_PREDIZER) {
 						gerarArquivoPorTurno(tipoDezena, predicaoService, turnosAPredizer);

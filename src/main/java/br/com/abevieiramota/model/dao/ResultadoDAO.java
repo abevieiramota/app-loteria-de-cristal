@@ -159,8 +159,10 @@ public class ResultadoDao {
 				rs.getString("premio10") };
 
 		Turno turno = Turno.values()[rs.getInt("turno")];
+		TipoLoteria tipoLoteria = TipoLoteria.values()[rs.getInt("tipo")];
 
-		Resultado resultado = new ResultadoBuilder().data(data).premios(premios).turno(turno).build();
+		Resultado resultado = new ResultadoBuilder().data(data).premios(premios).turno(turno).tipoLoteria(tipoLoteria)
+				.build();
 
 		return resultado;
 	}
