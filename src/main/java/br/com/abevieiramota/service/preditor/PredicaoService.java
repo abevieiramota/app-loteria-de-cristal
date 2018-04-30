@@ -4,14 +4,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
+
+import com.google.common.base.Joiner;
 
 import br.com.abevieiramota.model.Bicho;
-import br.com.abevieiramota.model.Premio;
+import br.com.abevieiramota.model.Dezena;
+import br.com.abevieiramota.model.Loteria;
 import br.com.abevieiramota.model.Resultado;
-import br.com.abevieiramota.model.TipoDezena;
-import br.com.abevieiramota.model.TipoLoteria;
+import br.com.abevieiramota.model.Resultado.Premio;
 import br.com.abevieiramota.model.Turno;
 import br.com.abevieiramota.model.dao.ResultadoDao;
 import br.com.abevieiramota.service.preditor.Predicao.PredicaoBuilder;
@@ -26,17 +28,17 @@ public class PredicaoService {
 	private static final String FORMATO_LINHA = "%2s %10s";
 
 	private ResultadoDao resDao;
-	private TipoDezena tipoDezena;
-	private TipoLoteria tipo;
+	private Dezena tipoDezena;
+	private Loteria tipo;
 
-	public PredicaoService(TipoDezena tipoDezena, TipoLoteria tipo) throws SQLException {
+	public PredicaoService(Dezena tipoDezena, Loteria tipo) throws SQLException {
 		// TODO: injeção de dependência
 		this.resDao = new ResultadoDao();
 		this.tipoDezena = tipoDezena;
 		this.tipo = tipo;
 	}
 
-	private List<Predicao> predicoes(EnumSet<Turno> turnos) throws SQLException {
+	private List<Predicao> gerarPredicoes(Set<Turno> turnos) {
 		checkNotNull(turnos);
 
 		List<Resultado> resultados = this.resDao.all(turnos, this.tipo);
@@ -54,7 +56,7 @@ public class PredicaoService {
 		return predicoes;
 	}
 
-	private static String predicoesParaImpressaoCompletaRow(List<Predicao> predicoes, TipoDezena tipoDezena) {
+	private static String predicoesParaImpressaoCompletaRow(List<Predicao> predicoes, Dezena tipoDezena) {
 		checkNotNull(predicoes);
 
 		Predicao p1 = predicoes.get(0);
@@ -89,10 +91,10 @@ public class PredicaoService {
 		return sb.toString();
 	}
 
-	public String predicoesParaImpressaoCompleta(EnumSet<Turno> turnos) throws SQLException {
+	public String predicoesParaImpressaoCompleta(Set<Turno> turnos) throws SQLException {
 		checkNotNull(turnos);
 
-		List<Predicao> predicoes = predicoes(turnos);
+		List<Predicao> predicoes = gerarPredicoes(turnos);
 		StringBuilder sb = new StringBuilder();
 		sb.append(predicoesParaImpressaoCompletaRow(predicoes.subList(0, 5), this.tipoDezena));
 		sb.append(LINE_SEPARATOR);
@@ -101,65 +103,33 @@ public class PredicaoService {
 		return sb.toString();
 	}
 
-	// TODO: aqui rebaixei meu nível de junior para baby
-	public String predicoesParaImpressaoResumida() throws SQLException {
-
-		List<Predicao> predicoesDiurno = predicoes(EnumSet.of(Turno.DIURNO));
-		List<Predicao> predicoesNoturno = predicoes(EnumSet.of(Turno.NOTURNO));
-		List<Predicao> predicoesDiuNoturno = predicoes(EnumSet.allOf(Turno.class));
+	public String predicoesParaImpressaoResumida(Set<Set<Turno>> combinacoesDeTurnos) throws SQLException {
 
 		StringBuilder sb = new StringBuilder();
 
-		// diurno
-		sb.append("DIURNO");
-		sb.append(LINE_SEPARATOR);
-		sb.append(FORMATO_ARQUIVO_RESUMIDO_HEADER);
-		sb.append(LINE_SEPARATOR);
+		for (Set<Turno> turnos : combinacoesDeTurnos) {
+			List<Predicao> predicoes = gerarPredicoes(turnos);
 
-		for (int i = 0; i < 4; i++) {
-			for (Predicao predicao : predicoesDiurno) {
-				sb.append(String.format("| %02d ", Bicho
-						.fromResultado(predicao.ordenadoPorVelhice()[i].premio(predicao.getPremio()), this.tipoDezena)
-						.ordinal() + 1));
-			}
-			sb.append("|" + LINE_SEPARATOR);
-		}
-		sb.append(LINE_SEPARATOR);
+			sb.append(Joiner.on(" ").join(turnos));
+			sb.append(LINE_SEPARATOR);
+			sb.append(FORMATO_ARQUIVO_RESUMIDO_HEADER);
+			sb.append(LINE_SEPARATOR);
 
-		// noturno
-		sb.append("NOTURNO");
-		sb.append(LINE_SEPARATOR);
-		sb.append(FORMATO_ARQUIVO_RESUMIDO_HEADER);
-		sb.append(LINE_SEPARATOR);
-		for (int i = 0; i < 4; i++) {
-			for (Predicao predicao : predicoesNoturno) {
-				sb.append(String.format("| %02d ", Bicho
-						.fromResultado(predicao.ordenadoPorVelhice()[i].premio(predicao.getPremio()), this.tipoDezena)
-						.ordinal() + 1));
+			for (int i = 0; i < 4; i++) {
+				for (Predicao predicao : predicoes) {
+					sb.append(String.format("| %02d ",
+							Bicho.fromResultado(predicao.ordenadoPorVelhice()[i].premio(predicao.getPremio()),
+									this.tipoDezena).ordinal() + 1));
+				}
+				sb.append("|" + LINE_SEPARATOR);
 			}
-			sb.append("|" + LINE_SEPARATOR);
+			sb.append(LINE_SEPARATOR);
 		}
-		sb.append(LINE_SEPARATOR);
-
-		// diurno e noturno
-		sb.append("DIURNO E NOTURNO");
-		sb.append(LINE_SEPARATOR);
-		sb.append(FORMATO_ARQUIVO_RESUMIDO_HEADER);
-		sb.append(LINE_SEPARATOR);
-		for (int i = 0; i < 4; i++) {
-			for (Predicao predicao : predicoesDiuNoturno) {
-				sb.append(String.format("| %02d ", Bicho
-						.fromResultado(predicao.ordenadoPorVelhice()[i].premio(predicao.getPremio()), this.tipoDezena)
-						.ordinal() + 1));
-			}
-			sb.append("|" + LINE_SEPARATOR);
-		}
-		sb.append(LINE_SEPARATOR);
 
 		return sb.toString();
 	}
 
-	public static String tabelaCompleta(Predicao predicao, TipoDezena tipoDezena) {
+	public static String tabelaCompleta(Predicao predicao, Dezena tipoDezena) {
 		checkNotNull(predicao);
 		checkNotNull(tipoDezena);
 

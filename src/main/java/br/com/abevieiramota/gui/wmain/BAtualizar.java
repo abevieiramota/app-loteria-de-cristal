@@ -31,7 +31,7 @@ public class BAtualizar extends JButton {
 				try {
 					LoteriaService service = new LoteriaService();
 
-					service.atualizar(Configuracao.getTipoLoteria());
+					service.atualizar(Parametros.getLoteria());
 					JOptionPane.showMessageDialog(null, MSG_ATUALIZACAO_COMPLETA);
 				} catch (IOException ex) {
 					ex.printStackTrace();

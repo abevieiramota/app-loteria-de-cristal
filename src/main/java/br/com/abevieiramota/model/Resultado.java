@@ -2,58 +2,53 @@ package br.com.abevieiramota.model;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 
-import java.util.Arrays;
-import java.util.Objects;
+import java.text.ParseException;
+import java.util.List;
 
-import com.google.common.base.CharMatcher;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 
-import br.com.abevieiramota.service.parser.Patterns;
+import br.com.abevieiramota.util.DataUtil;
 
+@Entity
+@Table(name = "resultado")
 public class Resultado {
 
-	private static final String FORMATO_TO_TABLE = "\tPrêmio %d:\t%s\n";
-	private static final String FORMATO_TO_STRING = "Data [%s][%s] Premios[%s]";
-
-	static public class ResultadoBuilder {
+	public static class ResultadoBuilder {
 
 		private Resultado resultado = new Resultado();
 
-		private boolean premiosSetados = false;
-		private boolean tipoLoteriaSetado = false;
-
 		public ResultadoBuilder data(String data) {
-			checkArgument(Patterns.REGEX_DATA.matcher(data).find());
+			checkNotNull(data);
 
 			this.resultado.data = data;
-
 			return this;
 		}
 
-		public ResultadoBuilder premios(String[] valores) {
-			checkNotNull(valores);
-			checkArgument(valores.length == 10);
+		public ResultadoBuilder premios(String[] premios) {
+			checkNotNull(premios);
+			checkArgument(premios.length == Premio.values().length);
 
-			for (String valor : valores) {
-				checkNotNull(valor);
-				checkArgument(CharMatcher.javaDigit().matchesAllOf(valor));
-				checkArgument(valor.length() == 4);
-			}
+			this.resultado.premio1 = premios[0];
+			this.resultado.premio2 = premios[1];
+			this.resultado.premio3 = premios[2];
+			this.resultado.premio4 = premios[3];
+			this.resultado.premio5 = premios[4];
+			this.resultado.premio6 = premios[5];
+			this.resultado.premio7 = premios[6];
+			this.resultado.premio8 = premios[7];
+			this.resultado.premio9 = premios[8];
+			this.resultado.premio10 = premios[9];
 
-			this.resultado.premios = valores;
-			this.premiosSetados = true;
-
-			return this;
-		}
-		
-		public ResultadoBuilder tipoLoteria(TipoLoteria tipoLoteria) {
-			checkNotNull(tipoLoteria);
-			
-			this.resultado.tipoLoteria = tipoLoteria;
-			this.tipoLoteriaSetado = true;
-			
 			return this;
 		}
 
@@ -61,69 +56,93 @@ public class Resultado {
 			checkNotNull(turno);
 
 			this.resultado.turno = turno;
-
 			return this;
 		}
 
-		public Resultado build() {
-			checkState(this.resultado.data != null);
-			checkState(this.premiosSetados);
-			checkState(this.resultado.turno != null);
-			checkState(this.tipoLoteriaSetado);
+		public ResultadoBuilder loteria(Loteria loteria) {
+			checkNotNull(loteria);
 
+			this.resultado.loteria = loteria;
+			return this;
+		}
+		
+		public Resultado build() {
 			return this.resultado;
 		}
+
 	}
 
-	private String[] premios;
+	public static enum Premio {
+		_1, _2, _3, _4, _5, _6, _7, _8, _9, _10;
+	}
+
+	private static final String FORMATO_TO_TABLE = "\tPrêmio %d:\t%s\n";
+	private static final String FORMATO_TO_STRING = "Data [%s][%s] Premios[%s]";
+
+	@Id
+	@Column(name = "id_resultado")
+	private Integer id;
+	@Column(name = "data")
 	private String data;
+	@ManyToOne
+	@JoinColumn(name = "id_turno")
 	private Turno turno;
-	private TipoLoteria tipoLoteria;
-
-	private Resultado() {
-		this.premios = new String[Premio.QUANTIDADE];
-	}
+	@ManyToOne
+	@JoinColumn(name = "id_loteria")
+	private Loteria loteria;
+	@Column(name = "premio1")
+	private String premio1;
+	@Column(name = "premio2")
+	private String premio2;
+	@Column(name = "premio3")
+	private String premio3;
+	@Column(name = "premio4")
+	private String premio4;
+	@Column(name = "premio5")
+	private String premio5;
+	@Column(name = "premio6")
+	private String premio6;
+	@Column(name = "premio7")
+	private String premio7;
+	@Column(name = "premio8")
+	private String premio8;
+	@Column(name = "premio9")
+	private String premio9;
+	@Column(name = "premio10")
+	private String premio10;
+	@Transient
+	private List<String> premiosAsArray;
 
 	public String premio(Premio posicao) {
-		return this.premios[posicao.ordinal()];
+		return this.getPremios().get(posicao.ordinal());
 	}
-	
-	public TipoLoteria getTipoLoteria() {
-		return this.tipoLoteria;
+
+	public Loteria getLoteria() {
+		return this.loteria;
 	}
-	
+
 	public String getData() {
 		return this.data;
 	}
-	
+
 	public Turno getTurno() {
 		return this.turno;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		boolean saoIguais = false;
-		if (obj instanceof Resultado) {
-			Resultado objResultado = (Resultado) obj;
+	public List<String> getPremios() {
 
-			saoIguais = Objects.equals(objResultado.data, this.data)
-					&& Objects.deepEquals(objResultado.premios, this.premios)
-					&& Objects.equals(objResultado.turno, this.turno);
+		if (this.premiosAsArray == null) {
+			this.premiosAsArray = Lists.newArrayList(this.premio1, this.premio2, this.premio3, this.premio4,
+					this.premio5, this.premio6, this.premio7, this.premio8, this.premio9, this.premio10);
 		}
 
-		return saoIguais;
-	}
-
-	@Override
-	public int hashCode() {
-
-		return Objects.hash(this.data, this.turno) + 13 * Arrays.hashCode(this.premios);
+		return this.premiosAsArray;
 	}
 
 	@Override
 	public String toString() {
 
-		return String.format(FORMATO_TO_STRING, this.data, this.turno, Joiner.on(',').join(this.premios));
+		return String.format(FORMATO_TO_STRING, this.data, this.turno, Joiner.on(',').join(this.getPremios()));
 	}
 
 	public String toTable() {
@@ -136,9 +155,9 @@ public class Resultado {
 		return sb.toString();
 	}
 
-	public boolean isAfter(String dtUltimaAtualizacao, Turno turnoUltimaAtualizacao) {
+	public boolean isAfter(String data, Turno turno) throws ParseException {
 
-		return !this.data.equals(dtUltimaAtualizacao) || turno.ordinal() > turnoUltimaAtualizacao.ordinal();
+		return DataUtil.compare(this.data, data) > 0 || this.turno.getHoraMinima() > turno.getHoraMaxima();
 	}
 
 }

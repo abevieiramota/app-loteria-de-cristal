@@ -27,7 +27,7 @@ public enum Bicho {
 	VEADO,
 	VACA;
 
-	public static Bicho fromResultado(String resultado, TipoDezena tipoDezena) {
+	public static Bicho fromResultado(String resultado, Dezena tipoDezena) {
 		Integer dezena = Integer.valueOf(tipoDezena.extract(resultado));
 
 		if (dezena == 0) {

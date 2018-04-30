@@ -1,30 +1,36 @@
 package br.com.abevieiramota.gui.wmain;
 
-import java.sql.SQLException;
-
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.swing.JLabel;
 
 import br.com.abevieiramota.messages.Messages;
-import br.com.abevieiramota.model.Turno;
-import br.com.abevieiramota.model.dao.ConfiguracoesDAO;
+import br.com.abevieiramota.model.Configuracao;
+import br.com.abevieiramota.model.dao.EMF;
 
 public class LabelUltimaAtualizacao extends JLabel {
 
-	private ConfiguracoesDAO confDAO = null;
 	private static final long serialVersionUID = -7369055521816327024L;
 	private static final String DEFAULT_TEXT_FORMAT = Messages.getString("ui.label_ultima_atualizacao.text");
 
-	public LabelUltimaAtualizacao() throws ClassNotFoundException, SQLException {
-		this.confDAO = new ConfiguracoesDAO();
-
+	public LabelUltimaAtualizacao() {
 		atualiza();
 	}
 
-	public void atualiza() throws SQLException {
-		String ultimaDataAtualizado = this.confDAO.ultimaDataAtualizado(Configuracao.getTipoLoteria());
-		Turno ultimoTurnoAtualizado = this.confDAO.ultimoTurnoAtualizado(Configuracao.getTipoLoteria());
+	public void atualiza() {
 
-		setText(String.format(DEFAULT_TEXT_FORMAT, ultimaDataAtualizado, ultimoTurnoAtualizado));
+		EntityManager manager = EMF.buildManager();
+
+		TypedQuery<Configuracao> query = manager.createQuery("from Configuracao where loteria = :loteria",
+				Configuracao.class);
+		query.setParameter("loteria", Parametros.getLoteria());
+
+		Configuracao configuracao = query.getSingleResult();
+		
+		manager.close();
+
+		setText(String.format(DEFAULT_TEXT_FORMAT, configuracao.getDataUltimaAtualizacao(),
+				configuracao.getTurnoUltimaAtualizacao()));
 	}
 
 }

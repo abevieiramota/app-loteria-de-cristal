@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.regex.Pattern;
 
-import br.com.abevieiramota.model.Premio;
+import br.com.abevieiramota.model.Resultado.Premio;
 
 /**
  * TODO: utilizar named groups

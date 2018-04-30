@@ -6,17 +6,17 @@ import java.util.Iterator;
 import java.util.Stack;
 
 import br.com.abevieiramota.model.Bicho;
-import br.com.abevieiramota.model.Premio;
 import br.com.abevieiramota.model.Resultado;
-import br.com.abevieiramota.model.TipoDezena;
+import br.com.abevieiramota.model.Resultado.Premio;
+import br.com.abevieiramota.model.Dezena;
 
 public class Predicao {
 
 	public static class PredicaoBuilder {
 		private Predicao predicao;
-		private TipoDezena tipoDezena;
+		private Dezena tipoDezena;
 
-		public PredicaoBuilder(Premio premio, TipoDezena tipoDezena) {
+		public PredicaoBuilder(Premio premio, Dezena tipoDezena) {
 			checkNotNull(premio);
 			checkNotNull(tipoDezena);
 

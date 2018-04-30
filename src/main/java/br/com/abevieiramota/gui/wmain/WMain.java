@@ -49,11 +49,11 @@ public class WMain extends WDefault {
 	}
 
 	public void initFields() throws ClassNotFoundException, SQLException {
+		this.tipoLoteria = new ComboTipoLoteria();
 		this.lStatusBar = new LabelUltimaAtualizacao();
 		this.bBuscarResultado = new BBuscarResultado(this);
 		this.bAtualizar = new BAtualizar();
 		this.bPredizer = new BPredizer(this);
-		this.tipoLoteria = new ComboTipoLoteria();
 	}
 
 	public static void main(String[] args) throws ClassNotFoundException, SQLException {

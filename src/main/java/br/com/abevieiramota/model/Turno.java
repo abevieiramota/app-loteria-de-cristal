@@ -1,43 +1,77 @@
 package br.com.abevieiramota.model;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-import br.com.abevieiramota.messages.Messages;
+@Entity
+@Table(name = "turno")
+public class Turno {
 
-public enum Turno {
+	@Id
+	@Column(name = "id_turno")
+	private Integer id;
+	@Column(name = "label")
+	private String label;
+	@Column(name = "hora_min")
+	private Integer horaMinima;
+	@Column(name = "hora_max")
+	private Integer horaMaxima;
 
-	DIURNO(new String[] { "14:00h", "14:40h", "14:45h", "14:30h" }),
-	NOTURNO(new String[] { "19:10h", "19:20h", "19:30h", "19:00h" });
-
-	private static final String MSG_ERRO_REPRESENTACAO = Messages.getString("erro.turno_inexistente");
-	private static final Map<String, Turno> MAP_REPR;
-
-	static {
-		Map<String, Turno> _mapRepr = new HashMap<>();
-
-		for (Turno turno : Turno.values()) {
-			for (String repr : turno.reprs) {
-				_mapRepr.put(repr, turno);
-			}
-		}
-
-		MAP_REPR = Collections.unmodifiableMap(_mapRepr);
+	public String getLabel() {
+		return label;
 	}
 
-	private String[] reprs;
-
-	Turno(String[] reprs) {
-		this.reprs = reprs;
+	public void setLabel(String label) {
+		this.label = label;
 	}
 
-	public static Turno get(String repr) {
-		if (!MAP_REPR.containsKey(repr)) {
-			throw new IllegalArgumentException(String.format(MSG_ERRO_REPRESENTACAO, repr));
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getHoraMinima() {
+		return horaMinima;
+	}
+
+	public void setHoraMinima(Integer horaMinima) {
+		this.horaMinima = horaMinima;
+	}
+
+	public Integer getHoraMaxima() {
+		return horaMaxima;
+	}
+
+	public void setHoraMaxima(Integer horaMaxima) {
+		this.horaMaxima = horaMaxima;
+	}
+
+	@Override
+	public String toString() {
+		return this.label;
+	}
+
+	@Override
+	public boolean equals(Object other) {
+
+		if (!(other instanceof Turno)) {
+			return false;
 		}
 
-		return MAP_REPR.get(repr);
+		Turno otherTurno = (Turno) other;
+
+		return this.id == otherTurno.id;
+	}
+	
+	@Override
+	public int hashCode() {
+		
+		return this.id.hashCode();
 	}
 
 }
