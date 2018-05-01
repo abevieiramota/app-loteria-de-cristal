@@ -1,12 +1,9 @@
 package br.com.abevieiramota.gui.wmain;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import javax.swing.JLabel;
 
 import br.com.abevieiramota.messages.Messages;
 import br.com.abevieiramota.model.Configuracao;
-import br.com.abevieiramota.model.dao.EMF;
 
 public class LabelUltimaAtualizacao extends JLabel {
 
@@ -19,15 +16,7 @@ public class LabelUltimaAtualizacao extends JLabel {
 
 	public void atualiza() {
 
-		EntityManager manager = EMF.buildManager();
-
-		TypedQuery<Configuracao> query = manager.createQuery("from Configuracao where loteria = :loteria",
-				Configuracao.class);
-		query.setParameter("loteria", Parametros.getLoteria());
-
-		Configuracao configuracao = query.getSingleResult();
-		
-		manager.close();
+		Configuracao configuracao = Parametros.getLoteria().getConfiguracao();
 
 		setText(String.format(DEFAULT_TEXT_FORMAT, configuracao.getDataUltimaAtualizacao(),
 				configuracao.getTurnoUltimaAtualizacao()));

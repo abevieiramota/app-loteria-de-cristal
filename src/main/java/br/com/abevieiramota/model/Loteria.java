@@ -2,7 +2,9 @@ package br.com.abevieiramota.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -14,21 +16,17 @@ public class Loteria {
 	private Integer id;
 	@Column(name = "label")
 	private String label;
+	@Column(name = "is_atualizavel")
+	private Boolean isAtualizavel;
+	@OneToOne(mappedBy = "loteria", fetch = FetchType.EAGER)
+	private Configuracao configuracao;
 
-	public Integer getId() {
-		return id;
+	public Boolean isAtualizavel() {
+		return this.isAtualizavel;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getLabel() {
-		return label;
-	}
-
-	public void setLabel(String label) {
-		this.label = label;
+	public Configuracao getConfiguracao() {
+		return this.configuracao;
 	}
 
 	@Override

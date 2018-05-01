@@ -12,13 +12,13 @@ import javax.swing.JTextField;
 import br.com.abevieiramota.gui.wmain.Parametros;
 import br.com.abevieiramota.messages.Messages;
 import br.com.abevieiramota.model.Resultado;
-import br.com.abevieiramota.model.dao.ResultadoDao;
+import br.com.abevieiramota.model.dao.Dao;
 
 public class BPesquisar extends JButton {
 
 	private static final long serialVersionUID = 1L;
 
-	private ResultadoDao resDAO;
+	private Dao resDAO;
 
 	private static final String LABEL = Messages.getString("ui.b_pesquisar.label");
 
@@ -26,7 +26,7 @@ public class BPesquisar extends JButton {
 			throws ClassNotFoundException, SQLException {
 		super(LABEL);
 
-		this.resDAO = new ResultadoDao();
+		this.resDAO = new Dao();
 
 		final JTextField dataFieldF = dataField;
 		final JTextArea resFieldDiurnoF = resDiurno;
@@ -36,7 +36,7 @@ public class BPesquisar extends JButton {
 
 			public void actionPerformed(ActionEvent e) {
 				String data = dataFieldF.getText();
-				List<Resultado> byData = BPesquisar.this.resDAO.byData(data, Parametros.getLoteria());
+				List<Resultado> byData = BPesquisar.this.resDAO.resultadoByData(data, Parametros.getLoteria());
 				if (byData.size() > 0) {
 					resFieldDiurnoF.setText(String.format("\t DIURNO\n%s", byData.get(0).toTable()));
 				} else {

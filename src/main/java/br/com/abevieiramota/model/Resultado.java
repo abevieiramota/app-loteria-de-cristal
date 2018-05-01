@@ -8,6 +8,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -65,7 +67,7 @@ public class Resultado {
 			this.resultado.loteria = loteria;
 			return this;
 		}
-		
+
 		public Resultado build() {
 			return this.resultado;
 		}
@@ -80,6 +82,7 @@ public class Resultado {
 	private static final String FORMATO_TO_STRING = "Data [%s][%s] Premios[%s]";
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_resultado")
 	private Integer id;
 	@Column(name = "data")
@@ -115,10 +118,6 @@ public class Resultado {
 
 	public String premio(Premio posicao) {
 		return this.getPremios().get(posicao.ordinal());
-	}
-
-	public Loteria getLoteria() {
-		return this.loteria;
 	}
 
 	public String getData() {

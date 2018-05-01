@@ -3,7 +3,6 @@ package br.com.abevieiramota.gui.wmain;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -22,7 +21,8 @@ public class BAtualizar extends JButton {
 
 	private static final String MSG_ATUALIZACAO_COMPLETA = Messages.getString("ui.b_atualizar.sucesso");
 
-	public BAtualizar() throws ClassNotFoundException, SQLException {
+
+	public BAtualizar(final LabelUltimaAtualizacao lStatusBar) throws ClassNotFoundException {
 		super(LABEL);
 
 		addActionListener(new ActionListener() {
@@ -32,6 +32,9 @@ public class BAtualizar extends JButton {
 					LoteriaService service = new LoteriaService();
 
 					service.atualizar(Parametros.getLoteria());
+					
+					lStatusBar.atualiza();
+					
 					JOptionPane.showMessageDialog(null, MSG_ATUALIZACAO_COMPLETA);
 				} catch (IOException ex) {
 					ex.printStackTrace();

@@ -4,11 +4,10 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.List;
 
-import javax.persistence.EntityManager;
 import javax.swing.JComboBox;
 
 import br.com.abevieiramota.model.Loteria;
-import br.com.abevieiramota.model.dao.EMF;
+import br.com.abevieiramota.model.dao.Dao;
 
 public class ComboTipoLoteria extends JComboBox<Loteria> {
 
@@ -16,17 +15,16 @@ public class ComboTipoLoteria extends JComboBox<Loteria> {
 
 	public ComboTipoLoteria() {
 
-		EntityManager manager = EMF.buildManager();
+		Dao dao = new Dao();
+		
+		List<Loteria> loterias = dao.allLoteria();
 
-		List<Loteria> loterias = manager.createQuery("from Loteria", Loteria.class).getResultList();
 		for (Loteria loteria : loterias) {
 			addItem(loteria);
 		}
-		
-		manager.close();
 
 		Parametros.setLoteria(getItemAt(0));
-		
+
 		setSelectedItem(Parametros.getLoteria());
 
 		addItemListener(new ItemListener() {

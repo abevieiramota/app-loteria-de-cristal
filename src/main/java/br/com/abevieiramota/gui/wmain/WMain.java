@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
@@ -20,7 +19,7 @@ public class WMain extends WDefault {
 
 	private static final long serialVersionUID = -759970510148809073L;
 	private static final String TITLE = Messages.getString("ui.w_main.title");
-	private JLabel lStatusBar;
+	private LabelUltimaAtualizacao lStatusBar;
 	private JButton bBuscarResultado;
 	private JButton bAtualizar;
 	private JButton bPredizer;
@@ -52,7 +51,7 @@ public class WMain extends WDefault {
 		this.tipoLoteria = new ComboTipoLoteria();
 		this.lStatusBar = new LabelUltimaAtualizacao();
 		this.bBuscarResultado = new BBuscarResultado(this);
-		this.bAtualizar = new BAtualizar();
+		this.bAtualizar = new BAtualizar(this.lStatusBar);
 		this.bPredizer = new BPredizer(this);
 	}
 

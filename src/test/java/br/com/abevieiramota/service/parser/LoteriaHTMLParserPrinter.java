@@ -25,8 +25,8 @@ public class LoteriaHTMLParserPrinter {
 
 	private static final Loteria LOTERIA_LOCAL = new Loteria();
 	static {
-		LOTERIA_LOCAL.setId(0);
-		LOTERIA_LOCAL.setLabel("Local");
+//		LOTERIA_LOCAL.setId(0);
+//		LOTERIA_LOCAL.setLabel("Local");
 	}
 
 	@Test

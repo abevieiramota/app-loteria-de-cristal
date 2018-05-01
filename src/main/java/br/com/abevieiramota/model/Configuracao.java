@@ -51,12 +51,4 @@ public class Configuracao {
 		this.turnoUltimaAtualizacao = turnoUltimaAtualizacao;
 	}
 
-	public Loteria getLoteria() {
-		return loteria;
-	}
-
-	public void setLoteria(Loteria loteria) {
-		this.loteria = loteria;
-	}
-	
 }

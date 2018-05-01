@@ -25,22 +25,22 @@ public class LoteriaHTMLParserBaseTest {
 
 	protected static final Turno TURNO_DIURNO = new Turno();
 	static {
-		TURNO_DIURNO.setId(0);
-		TURNO_DIURNO.setLabel("Diurno");
-		TURNO_DIURNO.setHoraMinima(10);
-		TURNO_DIURNO.setHoraMinima(14);
+//		TURNO_DIURNO.setId(0);
+//		TURNO_DIURNO.setLabel("Diurno");
+//		TURNO_DIURNO.setHoraMinima(10);
+//		TURNO_DIURNO.setHoraMinima(14);
 	}
 	protected static final Turno TURNO_NOTURNO = new Turno();
 	static {
-		TURNO_NOTURNO.setId(0);
-		TURNO_NOTURNO.setLabel("Noturno");
-		TURNO_NOTURNO.setHoraMinima(18);
-		TURNO_NOTURNO.setHoraMinima(20);
+//		TURNO_NOTURNO.setId(0);
+//		TURNO_NOTURNO.setLabel("Noturno");
+//		TURNO_NOTURNO.setHoraMinima(18);
+//		TURNO_NOTURNO.setHoraMinima(20);
 	}
 	protected static final Loteria LOTERIA_LOCAL = new Loteria();
 	static {
-		LOTERIA_LOCAL.setId(0);
-		LOTERIA_LOCAL.setLabel("Local");
+//		LOTERIA_LOCAL.setId(0);
+//		LOTERIA_LOCAL.setLabel("Local");
 	}
 
 	private Integer qtdDeResultadosEsperada;

@@ -1,18 +1,16 @@
 package br.com.abevieiramota.service.parser;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
-
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 
 import br.com.abevieiramota.model.Loteria;
 import br.com.abevieiramota.model.Resultado;
 import br.com.abevieiramota.model.Resultado.Premio;
 import br.com.abevieiramota.model.Resultado.ResultadoBuilder;
-import br.com.abevieiramota.model.dao.EMF;
 import br.com.abevieiramota.model.Turno;
+import br.com.abevieiramota.model.dao.Dao;
 import br.com.abevieiramota.service.parser.Patterns.GrupoDoRegex;
 
 public final class LoteriaHTMLParser {
@@ -49,21 +47,17 @@ public final class LoteriaHTMLParser {
 		String[] premios = new String[Premio.values().length];
 
 		String data = matcher.group(GrupoDoRegex.DATA.grupo);
-		String hora = matcher.group(GrupoDoRegex.TURNO.grupo);
-		EntityManager manager = EMF.buildManager();
-		
-		TypedQuery<Turno> query = manager.createQuery("select he.turno from HoraExpr he where value = :hora and he.turno.loteria = :loteria", Turno.class);
-		query.setParameter("hora", hora);
-		query.setParameter("loteria", loteria);
-		
-		Turno turno = query.getSingleResult();
-		
-		manager.close();
-		
+		String time = matcher.group(GrupoDoRegex.TURNO.grupo);
+
+		Dao dao = new Dao();
+		List<Turno> turnosDaLoteria = dao.turnosDaLoteria(loteria);
+
+		Turno turnoDoResultado = Turno.getTurnoByHoraPart(time, turnosDaLoteria);
+
 		for (Premio premio : Premio.values()) {
 			premios[premio.ordinal()] = matcher.group(GrupoDoRegex.grupoDoPremio(premio));
 		}
 
-		return new ResultadoBuilder().data(data).premios(premios).turno(turno).loteria(loteria).build();
+		return new ResultadoBuilder().data(data).premios(premios).turno(turnoDoResultado).loteria(loteria).build();
 	}
 }

@@ -27,13 +27,13 @@ public enum Bicho {
 	VEADO,
 	VACA;
 
-	public static Bicho fromResultado(String resultado, Dezena tipoDezena) {
-		Integer dezena = Integer.valueOf(tipoDezena.extract(resultado));
+	public static Bicho fromResultado(String resultado, Dezena dezena) {
+		Integer dezenaValue = Integer.valueOf(dezena.extract(resultado));
 
-		if (dezena == 0) {
-			dezena = 100;
+		if (dezenaValue == 0) {
+			dezenaValue = 100;
 		}
 
-		return Bicho.values()[(dezena - 1) / 4];
+		return Bicho.values()[(dezenaValue - 1) / 4];
 	}
 }

@@ -1,5 +1,8 @@
 package br.com.abevieiramota.gui.wmain;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -9,8 +12,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -22,7 +23,7 @@ import com.google.common.io.Files;
 import br.com.abevieiramota.messages.Messages;
 import br.com.abevieiramota.model.Dezena;
 import br.com.abevieiramota.model.Turno;
-import br.com.abevieiramota.model.dao.EMF;
+import br.com.abevieiramota.model.dao.Dao;
 import br.com.abevieiramota.service.preditor.PredicaoService;
 
 public class BPredizer extends JButton {
@@ -48,17 +49,13 @@ public class BPredizer extends JButton {
 
 		public void actionPerformed(ActionEvent e) {
 
-			EntityManager manager = EMF.buildManager();
+			Dao dao = new Dao();
 
 			try {
-				List<Dezena> dezenas = manager.createQuery("from Dezena", Dezena.class).getResultList();
+				List<Dezena> dezenas = dao.dezenas();
+				List<Turno> turnosDaLoteria = dao.turnosDaLoteria(Parametros.getLoteria());
 
-				TypedQuery<Turno> qTurnosDaLoteria = manager.createQuery("from Turno where loteria = :loteria",
-						Turno.class);
-				qTurnosDaLoteria.setParameter("loteria", Parametros.getLoteria());
-
-				List<Turno> turnosDaLoteria = qTurnosDaLoteria.getResultList();
-				Set<Set<Turno>> combinacoesDeTurnos = Sets.powerSet(Sets.newHashSet(turnosDaLoteria));
+				Set<Set<Turno>> combinacoesDeTurnos = Sets.filter(Sets.powerSet(Sets.newHashSet(turnosDaLoteria)), s -> !s.isEmpty());
 
 				for (Dezena dezena : dezenas) {
 					PredicaoService predicaoService = new PredicaoService(dezena, Parametros.getLoteria());
@@ -74,8 +71,6 @@ public class BPredizer extends JButton {
 				ex.printStackTrace();
 
 				JOptionPane.showMessageDialog(null, MSG_ERRO);
-			} finally {
-				manager.close();
 			}
 		}
 
@@ -92,6 +87,9 @@ public class BPredizer extends JButton {
 
 		private void gerarArquivoPorTurnos(Dezena dezena, PredicaoService predicaoService, Set<Turno> turnosAPredizer)
 				throws SQLException, IOException {
+			checkNotNull(turnosAPredizer);
+			checkArgument(!turnosAPredizer.isEmpty());
+			
 			String contentPorTurno = predicaoService.predicoesParaImpressaoCompleta(turnosAPredizer);
 
 			File filenamePorTurno = new File(

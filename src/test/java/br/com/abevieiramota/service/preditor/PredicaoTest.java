@@ -13,15 +13,15 @@ public class PredicaoTest {
 
 	private static final Turno TURNO_NOTURNO = new Turno();
 	static {
-		TURNO_NOTURNO.setId(0);
-		TURNO_NOTURNO.setLabel("Noturno");
-		TURNO_NOTURNO.setHoraMinima(10);
-		TURNO_NOTURNO.setHoraMinima(14);
+//		TURNO_NOTURNO.setId(0);
+//		TURNO_NOTURNO.setLabel("Noturno");
+//		TURNO_NOTURNO.setHoraMinima(10);
+//		TURNO_NOTURNO.setHoraMinima(14);
 	}
 	private static final Loteria LOTERIA_FEDERAL = new Loteria();
 	static {
-		LOTERIA_FEDERAL.setId(0);
-		LOTERIA_FEDERAL.setLabel("Federal");
+//		LOTERIA_FEDERAL.setId(0);
+//		LOTERIA_FEDERAL.setLabel("Federal");
 	}
 
 	private static Resultado resultado1 = new ResultadoBuilder().data("27/07/2013")

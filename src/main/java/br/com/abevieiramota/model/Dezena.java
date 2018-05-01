@@ -18,10 +18,17 @@ public class Dezena {
 	private Integer inicio;
 	@Column(name = "fim	")
 	private Integer fim;
+	@Column(name = "label")
+	private String label;
 
 	public String extract(String milhar) {
 		checkNotNull(milhar);
 
 		return milhar.substring(this.inicio, this.fim);
+	}
+	
+	@Override
+	public String toString() {
+		return this.label;
 	}
 }

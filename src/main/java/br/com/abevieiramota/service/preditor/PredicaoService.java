@@ -2,7 +2,6 @@ package br.com.abevieiramota.service.preditor;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -15,7 +14,7 @@ import br.com.abevieiramota.model.Loteria;
 import br.com.abevieiramota.model.Resultado;
 import br.com.abevieiramota.model.Resultado.Premio;
 import br.com.abevieiramota.model.Turno;
-import br.com.abevieiramota.model.dao.ResultadoDao;
+import br.com.abevieiramota.model.dao.Dao;
 import br.com.abevieiramota.service.preditor.Predicao.PredicaoBuilder;
 
 public class PredicaoService {
@@ -27,25 +26,25 @@ public class PredicaoService {
 	private final static String FORMATO_ARQUIVO_COMPLETO_LINHA = "%10s\t%10s\t%10s\t%10s\t%10s" + LINE_SEPARATOR;
 	private static final String FORMATO_LINHA = "%2s %10s";
 
-	private ResultadoDao resDao;
-	private Dezena tipoDezena;
-	private Loteria tipo;
+	private Dezena dezena;
+	private Loteria loteria;
 
-	public PredicaoService(Dezena tipoDezena, Loteria tipo) throws SQLException {
+	public PredicaoService(Dezena tipoDezena, Loteria loteria) {
 		// TODO: injeção de dependência
-		this.resDao = new ResultadoDao();
-		this.tipoDezena = tipoDezena;
-		this.tipo = tipo;
+		this.dezena = tipoDezena;
+		this.loteria = loteria;
 	}
 
 	private List<Predicao> gerarPredicoes(Set<Turno> turnos) {
 		checkNotNull(turnos);
 
-		List<Resultado> resultados = this.resDao.all(turnos, this.tipo);
+		Dao dao = new Dao();
+
+		List<Resultado> resultados = dao.allResultados(turnos, this.loteria);
 
 		List<Predicao> predicoes = new ArrayList<>();
 		for (Premio premio : Premio.values()) {
-			PredicaoBuilder predicaoBuilder = new Predicao.PredicaoBuilder(premio, this.tipoDezena);
+			PredicaoBuilder predicaoBuilder = new Predicao.PredicaoBuilder(premio, this.dezena);
 			for (Resultado res : resultados) {
 				predicaoBuilder.atualizar(res);
 			}
@@ -91,19 +90,19 @@ public class PredicaoService {
 		return sb.toString();
 	}
 
-	public String predicoesParaImpressaoCompleta(Set<Turno> turnos) throws SQLException {
+	public String predicoesParaImpressaoCompleta(Set<Turno> turnos) {
 		checkNotNull(turnos);
 
 		List<Predicao> predicoes = gerarPredicoes(turnos);
 		StringBuilder sb = new StringBuilder();
-		sb.append(predicoesParaImpressaoCompletaRow(predicoes.subList(0, 5), this.tipoDezena));
+		sb.append(predicoesParaImpressaoCompletaRow(predicoes.subList(0, 5), this.dezena));
 		sb.append(LINE_SEPARATOR);
-		sb.append(predicoesParaImpressaoCompletaRow(predicoes.subList(5, 10), this.tipoDezena));
+		sb.append(predicoesParaImpressaoCompletaRow(predicoes.subList(5, 10), this.dezena));
 
 		return sb.toString();
 	}
 
-	public String predicoesParaImpressaoResumida(Set<Set<Turno>> combinacoesDeTurnos) throws SQLException {
+	public String predicoesParaImpressaoResumida(Set<Set<Turno>> combinacoesDeTurnos) {
 
 		StringBuilder sb = new StringBuilder();
 
@@ -117,9 +116,9 @@ public class PredicaoService {
 
 			for (int i = 0; i < 4; i++) {
 				for (Predicao predicao : predicoes) {
-					sb.append(String.format("| %02d ",
-							Bicho.fromResultado(predicao.ordenadoPorVelhice()[i].premio(predicao.getPremio()),
-									this.tipoDezena).ordinal() + 1));
+					sb.append(String.format("| %02d ", Bicho
+							.fromResultado(predicao.ordenadoPorVelhice()[i].premio(predicao.getPremio()), this.dezena)
+							.ordinal() + 1));
 				}
 				sb.append("|" + LINE_SEPARATOR);
 			}

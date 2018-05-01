@@ -26,4 +26,4 @@ hs_err_pid*
 .classpath
 .project
 loteria.db.bkp
-.txt
+*.txt
