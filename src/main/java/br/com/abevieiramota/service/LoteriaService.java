@@ -53,6 +53,6 @@ public class LoteriaService {
 		}
 
 		dao.salvarResultados(resultadosASalvar);
-		dao.salvarConfiguracao(config);
+		dao.atualizar(config);
 	}
 }

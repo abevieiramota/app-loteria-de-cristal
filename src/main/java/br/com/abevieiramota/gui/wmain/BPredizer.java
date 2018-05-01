@@ -55,7 +55,13 @@ public class BPredizer extends JButton {
 				List<Dezena> dezenas = dao.dezenas();
 				List<Turno> turnosDaLoteria = dao.turnosDaLoteria(Parametros.getLoteria());
 
-				Set<Set<Turno>> combinacoesDeTurnos = Sets.filter(Sets.powerSet(Sets.newHashSet(turnosDaLoteria)), s -> !s.isEmpty());
+				Set<Set<Turno>> combinacoes1Turnos = Sets.combinations(Sets.newHashSet(turnosDaLoteria), 1);
+				Set<Set<Turno>> combinacoes2Turnos = Sets.combinations(Sets.newHashSet(turnosDaLoteria), 2);
+
+				// Set<Set<Turno>> combinacoesDeTurnos = Sets.union(combinacoes1Turnos,
+				// combinacoes2Turnos);
+				Set<Set<Turno>> combinacoesDeTurnos = Sets.filter(Sets.powerSet(Sets.newHashSet(turnosDaLoteria)),
+						s -> !s.isEmpty());
 
 				for (Dezena dezena : dezenas) {
 					PredicaoService predicaoService = new PredicaoService(dezena, Parametros.getLoteria());
@@ -74,8 +80,8 @@ public class BPredizer extends JButton {
 			}
 		}
 
-		private void gerarArquivoResumido(Dezena dezena, PredicaoService predicaoService, Set<Set<Turno>> combinacoesDeTurnos)
-				throws IOException, SQLException {
+		private void gerarArquivoResumido(Dezena dezena, PredicaoService predicaoService,
+				Set<Set<Turno>> combinacoesDeTurnos) throws IOException, SQLException {
 			String filenameResumido = String.format(FILE_NAME_PREDICAO_RESUMIDO, Parametros.getLoteria(), dezena);
 
 			File fileResumido = new File(filenameResumido);
@@ -89,7 +95,7 @@ public class BPredizer extends JButton {
 				throws SQLException, IOException {
 			checkNotNull(turnosAPredizer);
 			checkArgument(!turnosAPredizer.isEmpty());
-			
+
 			String contentPorTurno = predicaoService.predicoesParaImpressaoCompleta(turnosAPredizer);
 
 			File filenamePorTurno = new File(

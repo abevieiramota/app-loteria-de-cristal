@@ -74,12 +74,18 @@ public class PredicaoService {
 		for (int i = 0; i < 25; i++) {
 			StringBuilder sb2 = new StringBuilder();
 			for (Predicao predicao : predicoes) {
+				Resultado[] ordenadoPorVelhice = predicao.ordenadoPorVelhice();
+				if (i >= ordenadoPorVelhice.length) {
+					continue;
+				}
 				sb2.append(String.format("%10s\t", String.format(FORMATO_LINHA,
-						Bicho.fromResultado(predicao.ordenadoPorVelhice()[i].premio(predicao.getPremio()), tipoDezena)
-								.ordinal() + 1,
-						predicao.ordenadoPorVelhice()[i].getData())));
+						Bicho.fromResultado(ordenadoPorVelhice[i].premio(predicao.getPremio()), tipoDezena).ordinal()
+								+ 1,
+						ordenadoPorVelhice[i].getData())));
 			}
-			sb2.delete(sb2.length() - 1, sb2.length());
+			if (sb2.length() > 0) {
+				sb2.delete(sb2.length() - 1, sb2.length());
+			}
 
 			sb.append(sb2.toString());
 			sb.append(LINE_SEPARATOR);
@@ -116,9 +122,15 @@ public class PredicaoService {
 
 			for (int i = 0; i < 4; i++) {
 				for (Predicao predicao : predicoes) {
-					sb.append(String.format("| %02d ", Bicho
-							.fromResultado(predicao.ordenadoPorVelhice()[i].premio(predicao.getPremio()), this.dezena)
-							.ordinal() + 1));
+					Resultado[] ordenadoPorVelhice = predicao.ordenadoPorVelhice();
+
+					if (i >= ordenadoPorVelhice.length) {
+						continue;
+					}
+
+					sb.append(String.format("| %02d ",
+							Bicho.fromResultado(ordenadoPorVelhice[i].premio(predicao.getPremio()), this.dezena)
+									.ordinal() + 1));
 				}
 				sb.append("|" + LINE_SEPARATOR);
 			}

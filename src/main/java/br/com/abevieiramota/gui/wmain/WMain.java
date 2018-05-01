@@ -23,7 +23,8 @@ public class WMain extends WDefault {
 	private JButton bBuscarResultado;
 	private JButton bAtualizar;
 	private JButton bPredizer;
-	private ComboTipoLoteria tipoLoteria;
+	private JButton bAdicionar;
+	private ComboLoteria tipoLoteria;
 
 	public WMain() {
 		super(TITLE);
@@ -32,6 +33,8 @@ public class WMain extends WDefault {
 	public void initGUI() {
 		JPanel pBotoes = new JPanel();
 		pBotoes.setLayout(new BoxLayout(pBotoes, BoxLayout.Y_AXIS));
+		pBotoes.add(this.bAdicionar);
+		pBotoes.add(Box.createRigidArea(new Dimension(0, 10)));
 		pBotoes.add(this.bBuscarResultado);
 		pBotoes.add(Box.createRigidArea(new Dimension(0, 10)));
 		pBotoes.add(this.bAtualizar);
@@ -48,11 +51,12 @@ public class WMain extends WDefault {
 	}
 
 	public void initFields() throws ClassNotFoundException, SQLException {
-		this.tipoLoteria = new ComboTipoLoteria();
+		this.tipoLoteria = new ComboLoteria();
 		this.lStatusBar = new LabelUltimaAtualizacao();
 		this.bBuscarResultado = new BBuscarResultado(this);
 		this.bAtualizar = new BAtualizar(this.lStatusBar);
 		this.bPredizer = new BPredizer(this);
+		this.bAdicionar = new BAdicionar(this);
 	}
 
 	public static void main(String[] args) throws ClassNotFoundException, SQLException {

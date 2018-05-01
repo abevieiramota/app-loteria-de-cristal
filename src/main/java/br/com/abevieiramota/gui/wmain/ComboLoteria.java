@@ -9,11 +9,11 @@ import javax.swing.JComboBox;
 import br.com.abevieiramota.model.Loteria;
 import br.com.abevieiramota.model.dao.Dao;
 
-public class ComboTipoLoteria extends JComboBox<Loteria> {
+public class ComboLoteria extends JComboBox<Loteria> {
 
 	private static final long serialVersionUID = -579854775706297019L;
 
-	public ComboTipoLoteria() {
+	public ComboLoteria() {
 
 		Dao dao = new Dao();
 		

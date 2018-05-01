@@ -9,7 +9,6 @@ import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
 import br.com.abevieiramota.gui.wmain.Parametros;
-import br.com.abevieiramota.model.Configuracao;
 import br.com.abevieiramota.model.Dezena;
 import br.com.abevieiramota.model.Loteria;
 import br.com.abevieiramota.model.Resultado;
@@ -111,13 +110,13 @@ public class Dao {
 		return dezenas;
 	}
 
-	public void salvarConfiguracao(Configuracao config) {
+	public <E> void atualizar(E entity) {
 
 		EntityManager manager = EMF.buildManager();
 
 		try {
 			manager.getTransaction().begin();
-			manager.merge(config);
+			manager.merge(entity);
 			manager.getTransaction().commit();
 		} catch (Exception ex) {
 			if (manager.getTransaction().isActive()) {
@@ -127,6 +126,37 @@ public class Dao {
 		}
 
 		manager.close();
+	}
+
+	public <E> void persistir(E entity) {
+		EntityManager manager = EMF.buildManager();
+
+		try {
+			manager.getTransaction().begin();
+			manager.persist(entity);
+			manager.getTransaction().commit();
+		} catch (Exception ex) {
+			if (manager.getTransaction().isActive()) {
+				manager.getTransaction().rollback();
+			}
+			throw ex;
+		}
+
+		manager.close();
+	}
+
+	public boolean existsResultado(String data, Turno turno, Loteria loteria) {
+		EntityManager manager = EMF.buildManager();
+
+		TypedQuery<Resultado> query = manager.createQuery(
+				"from Resultado where data = :data and turno = :turno and loteria = :loteria", Resultado.class);
+		query.setParameter("data", data);
+		query.setParameter("turno", turno);
+		query.setParameter("loteria", loteria);
+
+		List<Resultado> resultado = query.getResultList();
+
+		return !resultado.isEmpty();
 	}
 
 }

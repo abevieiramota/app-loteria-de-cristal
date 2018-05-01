@@ -4,7 +4,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.text.ParseException;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,8 +21,10 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 
+import br.com.abevieiramota.messages.Messages;
 import br.com.abevieiramota.util.DataUtil;
 
 @Entity
@@ -27,6 +33,7 @@ public class Resultado {
 
 	public static class ResultadoBuilder {
 
+		private static final String MSG_ERRO_FORMATO_PREMIO = Messages.getString("ui.erro.premio_formato_invalido");
 		private Resultado resultado = new Resultado();
 
 		public ResultadoBuilder data(String data) {
@@ -39,6 +46,11 @@ public class Resultado {
 		public ResultadoBuilder premios(String[] premios) {
 			checkNotNull(premios);
 			checkArgument(premios.length == Premio.values().length);
+
+			Collection<String> premiosInvalidos = Collections2.filter(Arrays.asList(premios), s -> !Premio.isPremio(s));
+			if (!premiosInvalidos.isEmpty()) {
+				throw new IllegalArgumentException(MSG_ERRO_FORMATO_PREMIO);
+			}
 
 			this.resultado.premio1 = premios[0];
 			this.resultado.premio2 = premios[1];
@@ -76,6 +88,13 @@ public class Resultado {
 
 	public static enum Premio {
 		_1, _2, _3, _4, _5, _6, _7, _8, _9, _10;
+		private static Pattern PREMIO_PATTERN = Pattern.compile("\\d{4}");
+
+		public static boolean isPremio(String value) {
+			Matcher m = PREMIO_PATTERN.matcher(value);
+
+			return m.find();
+		}
 	}
 
 	private static final String FORMATO_TO_TABLE = "\tPrêmio %d:\t%s\n";
