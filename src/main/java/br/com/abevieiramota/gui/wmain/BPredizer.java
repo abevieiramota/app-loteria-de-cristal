@@ -56,12 +56,10 @@ public class BPredizer extends JButton {
 				List<Turno> turnosDaLoteria = dao.turnosDaLoteria(Parametros.getLoteria());
 
 				Set<Set<Turno>> combinacoes1Turnos = Sets.combinations(Sets.newHashSet(turnosDaLoteria), 1);
-				Set<Set<Turno>> combinacoes2Turnos = Sets.combinations(Sets.newHashSet(turnosDaLoteria), 2);
+				Set<Set<Turno>> combinacoes2Turnos = Sets.combinations(Sets.newHashSet(turnosDaLoteria),
+						turnosDaLoteria.size());
 
-				// Set<Set<Turno>> combinacoesDeTurnos = Sets.union(combinacoes1Turnos,
-				// combinacoes2Turnos);
-				Set<Set<Turno>> combinacoesDeTurnos = Sets.filter(Sets.powerSet(Sets.newHashSet(turnosDaLoteria)),
-						s -> !s.isEmpty());
+				Set<Set<Turno>> combinacoesDeTurnos = Sets.union(combinacoes1Turnos, combinacoes2Turnos);
 
 				for (Dezena dezena : dezenas) {
 					PredicaoService predicaoService = new PredicaoService(dezena, Parametros.getLoteria());

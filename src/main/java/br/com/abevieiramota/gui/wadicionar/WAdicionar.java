@@ -153,6 +153,7 @@ public class WAdicionar extends WDefault {
 		this.lLoteriaValue = new JLabel(Parametros.getLoteria().toString());
 		this.lDate = new JLabel("Data: ");
 		this.fData = new JFormattedTextField(new MaskFormatter(DATE_MASK));
+		this.fData.setPreferredSize(new Dimension(70, 20));
 		this.lTurno = new JLabel("Turno: ");
 		this.comboTurno = new ComboTurno();
 

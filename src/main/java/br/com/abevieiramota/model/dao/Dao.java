@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import br.com.abevieiramota.gui.wmain.Parametros;
@@ -157,6 +158,27 @@ public class Dao {
 		List<Resultado> resultado = query.getResultList();
 
 		return !resultado.isEmpty();
+	}
+
+	public void deletarResultado(Loteria loteria, Turno turno, String data) {
+		
+		EntityManager manager = EMF.buildManager();
+		
+		Query query = manager.createQuery("delete from Resultado where data = :data and turno = :turno and loteria = :loteria");
+		query.setParameter("data", data);
+		query.setParameter("loteria", loteria);
+		query.setParameter("turno", turno);
+		
+		try {
+			manager.getTransaction().begin();
+			query.executeUpdate();
+			manager.getTransaction().commit();
+		} catch (Exception ex) {
+			if (manager.getTransaction().isActive()) {
+				manager.getTransaction().rollback();
+			}
+			throw ex;
+		}
 	}
 
 }
