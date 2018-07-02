@@ -43,7 +43,7 @@ public class BPesquisar extends JButton {
 
 					JTextArea jTextArea = fResultados.get(resultado.getTurno());
 					jTextArea
-							.setText(String.format("\t %s \n%s", resultado.getTurno().toString(), resultado.toTable()));
+							.setText(String.format("\t%s \n%s", resultado.getTurno().toString(), resultado.toTable()));
 				}
 			}
 		});

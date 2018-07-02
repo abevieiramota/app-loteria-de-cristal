@@ -97,7 +97,7 @@ public class Resultado {
 		}
 	}
 
-	private static final String FORMATO_TO_TABLE = "\tPrêmio %d:\t%s\n";
+	private static final String FORMATO_TO_TABLE = "Prêmio %d:\t%s\n";
 	private static final String FORMATO_TO_STRING = "Data [%s][%s] Premios[%s]";
 
 	@Id
