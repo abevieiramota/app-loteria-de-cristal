@@ -19,6 +19,8 @@ public class BDeletar extends JButton {
 	private static final long serialVersionUID = 1L;
 	private static final String LABEL = Messages.getString("ui.b_deletar.label");
 	private static final String MSG_RESULTADO_DELETADO = Messages.getString("ui.sucesso.resultado_deletado");
+	private static final String MSG_RESULTADO_JAH_DELETADO = Messages.getString("ui.sucesso.resultado_jah_deletado");
+	private static final String MSG_RESULTADO_NAO_EXISTE = Messages.getString("ui.sucesso.resultado_nao_existe");
 
 	private final Turno turno;
 	private String data;
@@ -36,11 +38,17 @@ public class BDeletar extends JButton {
 
 				Dao dao = new Dao();
 
-				dao.deletarResultado(Parametros.getLoteria(), BDeletar.this.turno, BDeletar.this.data);
+				boolean isDeletado = dao.deletarResultado(Parametros.getLoteria(), BDeletar.this.turno,
+						BDeletar.this.data);
 
-				BDeletar.this.jTextArea.setText("");
-				
-				JOptionPane.showMessageDialog(null, MSG_RESULTADO_DELETADO);
+				if (isDeletado) {
+
+					BDeletar.this.jTextArea.setText(MSG_RESULTADO_NAO_EXISTE);
+
+					JOptionPane.showMessageDialog(null, MSG_RESULTADO_DELETADO);
+				} else {
+					JOptionPane.showMessageDialog(null, MSG_RESULTADO_JAH_DELETADO);
+				}
 			}
 		});
 	}

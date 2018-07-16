@@ -76,6 +76,7 @@ public class PredicaoService {
 			for (Predicao predicao : predicoes) {
 				Resultado[] ordenadoPorVelhice = predicao.ordenadoPorVelhice();
 				if (i >= ordenadoPorVelhice.length) {
+					sb2.append(String.format("%13s\t", ""));
 					continue;
 				}
 				sb2.append(String.format("%10s\t", String.format(FORMATO_LINHA,

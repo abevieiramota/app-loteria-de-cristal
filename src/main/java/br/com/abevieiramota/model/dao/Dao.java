@@ -160,7 +160,7 @@ public class Dao {
 		return !resultado.isEmpty();
 	}
 
-	public void deletarResultado(Loteria loteria, Turno turno, String data) {
+	public boolean deletarResultado(Loteria loteria, Turno turno, String data) {
 		
 		EntityManager manager = EMF.buildManager();
 		
@@ -171,8 +171,10 @@ public class Dao {
 		
 		try {
 			manager.getTransaction().begin();
-			query.executeUpdate();
+			int nUpdated = query.executeUpdate();
 			manager.getTransaction().commit();
+			
+			return nUpdated == 0 ? false: true;
 		} catch (Exception ex) {
 			if (manager.getTransaction().isActive()) {
 				manager.getTransaction().rollback();

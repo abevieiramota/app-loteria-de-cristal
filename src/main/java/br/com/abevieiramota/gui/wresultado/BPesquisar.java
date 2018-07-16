@@ -20,6 +20,8 @@ public class BPesquisar extends JButton {
 	private static final long serialVersionUID = 1L;
 
 	private static final String LABEL = Messages.getString("ui.b_pesquisar.label");
+	private static final String MSG_RESULTADO_NAO_EXISTE = Messages.getString("ui.sucesso.resultado_nao_existe");
+	
 
 	public BPesquisar(JTextField dataField, final Map<Turno, JTextArea> fResultados,
 			final Map<Turno, BDeletar> bResultados) {
@@ -37,6 +39,10 @@ public class BPesquisar extends JButton {
 
 				for (BDeletar jButton : bResultados.values()) {
 					jButton.setData(data);
+				}
+				
+				for(JTextArea jtextArea: fResultados.values()) {
+					jtextArea.setText(MSG_RESULTADO_NAO_EXISTE);
 				}
 
 				for (Resultado resultado : resultadoByData) {
