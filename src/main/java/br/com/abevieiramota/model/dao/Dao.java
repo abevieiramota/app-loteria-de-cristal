@@ -42,7 +42,8 @@ public class Dao {
 		EntityManager manager = EMF.buildManager();
 
 		TypedQuery<Resultado> query = manager
-				.createQuery("from Resultado where turno in (:turnos) and loteria = :loteria", Resultado.class);
+				.createQuery("from Resultado where turno in (:turnos) and loteria = :loteria"
+						+ " order by substr(data, 7) || substr(data, 4, 2) || substr(data, 1, 2) asc", Resultado.class);
 		query.setParameter("turnos", turnos);
 		query.setParameter("loteria", loteria);
 
